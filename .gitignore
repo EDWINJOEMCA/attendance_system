@@ -1,0 +1,98 @@
+# ------------------------------
+# Python
+# ------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+
+# ------------------------------
+# Django
+# ------------------------------
+*.log
+*.pot
+*.pyc
+db.sqlite3
+db.sqlite3-journal
+
+# Django static & media
+/staticfiles/
+/media/
+
+# Secret settings
+.env
+.env.*
+*.env
+
+# ------------------------------
+# Security / Secrets
+# ------------------------------
+*.key
+*.pem
+*.crt
+
+# ------------------------------
+# AI / ML Models (IMPORTANT)
+# ------------------------------
+# YOLO weights (auto-download)
+*.pt
+
+# MediaPipe cache
+*.tflite
+
+# Torch cache
+.cache/
+torch_cache/
+
+# ------------------------------
+# OpenCV / Video / Images
+# ------------------------------
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.jpg
+*.jpeg
+*.png
+
+# ------------------------------
+# Testing / Coverage
+# ------------------------------
+.coverage
+htmlcov/
+.tox/
+.pytest_cache/
+
+# ------------------------------
+# IDE / Editor
+# ------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ------------------------------
+# OS Files
+# ------------------------------
+.DS_Store
+Thumbs.db
+
+# ------------------------------
+# Build / Distribution
+# ------------------------------
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# ------------------------------
+# Logs / Temp
+# ------------------------------
+*.tmp
+*.bak
+*.log

@@ -1,0 +1,61 @@
+{% extends "attendance/base.html" %}
+{% block title %}Smart Attendance — Home{% endblock %}
+
+{% block content %}
+<div class="page" style="min-height: calc(100vh - 53px); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:2.5rem;">
+
+  <div>
+    <div style="font-family:var(--mono);font-size:.78rem;letter-spacing:.2em;color:var(--muted);margin-bottom:.8rem;">
+      AI · COMPUTER VISION · ATTENDANCE
+    </div>
+    <h1 style="font-family:var(--mono);font-size:2.6rem;line-height:1.15;letter-spacing:-.01em;color:var(--text);">
+      Smart Attendance<br>
+      <span style="color:var(--accent1);">System</span>
+    </h1>
+    <p style="color:var(--muted);margin-top:1rem;max-width:480px;line-height:1.7;font-size:.95rem;">
+      Two-mode attendance solution. Use <strong style="color:var(--text)">face recognition + gestures</strong>
+      for individual roll call, then switch to the <strong style="color:var(--text)">classroom counter</strong>
+      for a live head-count using YOLOv8.
+    </p>
+  </div>
+
+  <div style="display:flex;gap:1.2rem;flex-wrap:wrap;justify-content:center;">
+
+    <!-- Mode 1 -->
+    <a href="/face/" style="text-decoration:none;">
+      <div class="card" style="width:280px;text-align:left;cursor:pointer;transition:all .25s;border-color:transparent;"
+           onmouseover="this.style.borderColor='var(--accent1)'"
+           onmouseout="this.style.borderColor='transparent'">
+        <div style="font-size:2rem;margin-bottom:1rem;">🎭</div>
+        <div style="font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;color:var(--accent1);margin-bottom:.4rem;">MODE 01</div>
+        <div style="font-weight:600;font-size:1.1rem;margin-bottom:.6rem;">Face Recognition</div>
+        <div style="color:var(--muted);font-size:.85rem;line-height:1.6;">
+          Students approach, hold still to be recognised, then swipe right to mark present or left to cancel.
+        </div>
+        <div style="margin-top:1.2rem;font-family:var(--mono);font-size:.75rem;color:var(--accent1);">OPEN →</div>
+      </div>
+    </a>
+
+    <!-- Mode 2 -->
+    <a href="/classroom/" style="text-decoration:none;">
+      <div class="card" style="width:280px;text-align:left;cursor:pointer;transition:all .25s;border-color:transparent;"
+           onmouseover="this.style.borderColor='var(--accent2)'"
+           onmouseout="this.style.borderColor='transparent'">
+        <div style="font-size:2rem;margin-bottom:1rem;">📹</div>
+        <div style="font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;color:var(--accent2);margin-bottom:.4rem;">MODE 02</div>
+        <div style="font-weight:600;font-size:1.1rem;margin-bottom:.6rem;">Classroom Counter</div>
+        <div style="color:var(--muted);font-size:.85rem;line-height:1.6;">
+          Mount a classroom camera. YOLOv8 tracks every student via unique IDs and shows a live head-count.
+        </div>
+        <div style="margin-top:1.2rem;font-family:var(--mono);font-size:.75rem;color:var(--accent2);">OPEN →</div>
+      </div>
+    </a>
+
+  </div>
+
+  <div style="font-family:var(--mono);font-size:.7rem;color:var(--muted);letter-spacing:.08em;">
+    MediaPipe · YOLOv8 · OpenCV · Django
+  </div>
+
+</div>
+{% endblock %}

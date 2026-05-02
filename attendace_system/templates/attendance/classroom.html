@@ -1,0 +1,199 @@
+{% extends "attendance/base.html" %}
+{% block title %}Classroom Counter — Attendance{% endblock %}
+
+{% block extra_head %}
+<style>
+  .log-scroll { max-height: 340px; overflow-y: auto; }
+  .log-scroll::-webkit-scrollbar { width: 4px; }
+  .log-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  #big-count, #face-count, #missing-count, #extra-count {
+    font-family: var(--mono);
+    font-size: 5rem;
+    color: var(--accent2);
+    line-height: 1;
+    transition: all .3s;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page">
+  <div class="page-title">
+    📹 Classroom Counter <span>/ mode 02</span>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat-card" style="text-align:center;">
+      <div class="label">Present Now</div>
+      <div id="big-count">0</div>
+    </div>
+
+    <div class="stat-card" style="text-align:center;">
+      <div class="label">Face Present</div>
+      <div id="face-count">0</div>
+    </div>
+
+    <div class="stat-card" style="text-align:center;">
+      <div class="label">Missing</div>
+      <div id="missing-count">0</div>
+    </div>
+
+    <div class="stat-card" style="text-align:center;">
+      <div class="label">Extra</div>
+      <div id="extra-count">0</div>
+    </div>
+
+    <div class="stat-card" style="display:flex;align-items:center;justify-content:flex-end;background:transparent;border:none;">
+      <button class="btn btn-outline" onclick="resetCounter()">Reset</button>
+    </div>
+  </div>
+
+  <!-- Layout -->
+  <div class="two-col">
+
+    <!-- Camera -->
+    <div>
+      <div class="feed-wrap">
+        <img id="feed" src="/classroom/stream/" alt="Classroom stream">
+      </div>
+      <div style="margin-top:.75rem;color:var(--muted);font-size:.82rem;">
+        Tracks students in real-time using YOLO.
+      </div>
+    </div>
+
+    <!-- Log -->
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;">
+        <span style="font-family:var(--mono);font-size:.78rem;color:var(--muted);">
+          EVENT LOG
+        </span>
+        <span id="log-count" style="font-family:var(--mono);color:var(--accent2);">
+          0 events
+        </span>
+      </div>
+
+      <div class="log-scroll">
+        <table class="log-table">
+          <thead>
+            <tr><th>TIME</th><th>ID</th><th>EVENT</th></tr>
+          </thead>
+          <tbody id="log-body">
+            <tr>
+              <td colspan="3" style="color:var(--muted);text-align:center;padding:2rem 0;">
+                No events yet
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* ---------------- AUDIO SYSTEM ---------------- */
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+
+function ensureAudioCtx() {
+  if (!audioCtx) {
+    audioCtx = new AudioCtx();
+  }
+  audioCtx.resume();
+}
+
+/* Alarm Sound */
+function playAlarm() {
+  ensureAudioCtx();
+
+  const duration = 2;
+  const now = audioCtx.currentTime;
+
+  for (let i = 0; i < duration * 4; i++) {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    osc.frequency.value = (i % 2 === 0) ? 1000 : 700;
+
+    gain.gain.setValueAtTime(0.5, now + i * 0.25);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.25 + 0.2);
+
+    osc.start(now + i * 0.25);
+    osc.stop(now + i * 0.25 + 0.2);
+  }
+}
+
+/* Enable audio after user click */
+document.addEventListener('click', () => ensureAudioCtx(), { once: true });
+
+
+/* ---------------- DATA POLLING ---------------- */
+const POLL_MS = 500;
+let prevCount = 0;
+
+async function pollStats() {
+  try {
+    const res = await fetch('/classroom/stats/');
+    const d = await res.json();
+
+    /* Present count animation */
+    const cnt = document.getElementById('big-count');
+    if (d.present_count !== prevCount) {
+      cnt.style.transform = 'scale(1.15)';
+      setTimeout(() => cnt.style.transform = 'scale(1)', 250);
+      prevCount = d.present_count;
+    }
+
+    /* Update values */
+    cnt.textContent = d.present_count;
+    document.getElementById('face-count').textContent = d.face_present_count || 0;
+    document.getElementById('missing-count').textContent = d.missing || 0;
+    document.getElementById('extra-count').textContent = d.extra || 0;
+
+    /* PLAY SOUND */
+    if (d.alarm) {
+      playAlarm();
+    }
+
+    /* Update log */
+    const body = document.getElementById('log-body');
+    const history = (d.history || []).slice().reverse();
+
+    if (history.length === 0) {
+      body.innerHTML = '<tr><td colspan="3" style="text-align:center;">No events yet</td></tr>';
+    } else {
+      body.innerHTML = history.map(r => `
+        <tr>
+          <td>${r.time}</td>
+          <td>ID ${r.id}</td>
+          <td><span class="badge ${r.event==='ENTERED'?'badge-green':'badge-red'}">${r.event}</span></td>
+        </tr>
+      `).join('');
+    }
+
+    document.getElementById('log-count').textContent =
+      `${history.length} event${history.length !== 1 ? 's' : ''}`;
+
+  } catch (e) {
+    console.log("Waiting for stream...");
+  }
+
+  setTimeout(pollStats, POLL_MS);
+}
+
+/* Reset */
+async function resetCounter() {
+  if (!confirm('Reset classroom counter?')) return;
+  await fetch('/classroom/reset/', { method: 'POST' });
+}
+
+/* Start */
+pollStats();
+</script>
+{% endblock %}

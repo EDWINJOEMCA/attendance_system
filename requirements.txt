@@ -1,0 +1,5 @@
+django>=4.2,<5.0
+opencv-python>=4.8
+mediapipe>=0.10
+ultralytics>=8.0
+pygame>=2.5

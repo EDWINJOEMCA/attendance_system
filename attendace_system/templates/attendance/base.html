@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Smart Attendance{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #090b10;
+      --surface:   #111520;
+      --border:    #1e2535;
+      --accent1:   #00e5a0;   /* teal-green  */
+      --accent2:   #4d7cff;   /* electric blue */
+      --accent3:   #ff4d6d;   /* coral red */
+      --text:      #d8dde8;
+      --muted:     #4a5068;
+      --mono:      'Space Mono', monospace;
+      --sans:      'DM Sans', sans-serif;
+    }
+
+    html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--sans); }
+
+    /* ── Nav ────────────────────────────────────── */
+    nav {
+      display: flex; align-items: center; gap: 1.5rem;
+      padding: .8rem 2rem;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 100;
+    }
+    nav .brand {
+      font-family: var(--mono); font-size: .85rem; letter-spacing: .12em;
+      color: var(--accent1); text-decoration: none; margin-right: auto;
+    }
+    nav a { color: var(--muted); text-decoration: none; font-size: .88rem;
+            padding: .35rem .8rem; border-radius: 6px; transition: all .2s; }
+    nav a:hover, nav a.active { color: var(--text); background: var(--border); }
+
+    /* ── Page wrapper ───────────────────────────── */
+    .page { padding: 2.5rem 2rem; max-width: 1200px; margin: 0 auto; }
+    .page-title {
+      font-family: var(--mono); font-size: 1.4rem; letter-spacing: .06em;
+      color: var(--accent1); margin-bottom: 2rem;
+    }
+    .page-title span { color: var(--muted); font-size: .85rem; margin-left: .8rem; }
+
+    /* ── Cards ──────────────────────────────────── */
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.5rem;
+    }
+
+    /* ── Buttons ────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .6rem 1.4rem; border-radius: 8px; border: none;
+      font-family: var(--sans); font-size: .88rem; font-weight: 500;
+      cursor: pointer; transition: all .2s; text-decoration: none;
+    }
+    .btn-primary { background: var(--accent1); color: #070a0f; }
+    .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+    .btn-danger  { background: var(--accent3); color: #fff; }
+    .btn-danger:hover  { filter: brightness(1.1); }
+    .btn-outline {
+      background: transparent; color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-outline:hover { border-color: var(--accent2); color: var(--accent2); }
+
+    /* ── Video feed ─────────────────────────────── */
+    .feed-wrap {
+      border-radius: 10px; overflow: hidden;
+      border: 1px solid var(--border);
+      background: #000; aspect-ratio: 16/9;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .feed-wrap img { width: 100%; height: 100%; object-fit: contain; }
+
+    /* ── Stats row ──────────────────────────────── */
+    .stats { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .stat-card {
+      flex: 1 1 140px; background: var(--surface);
+      border: 1px solid var(--border); border-radius: 10px;
+      padding: 1rem 1.2rem;
+    }
+    .stat-card .label { font-size: .72rem; letter-spacing: .1em; color: var(--muted); text-transform: uppercase; }
+    .stat-card .value { font-family: var(--mono); font-size: 2rem; color: var(--accent1); margin-top: .3rem; }
+
+    /* ── Log table ──────────────────────────────── */
+    .log-table { width: 100%; border-collapse: collapse; font-size: .83rem; }
+    .log-table th {
+      text-align: left; padding: .5rem .8rem;
+      font-family: var(--mono); font-size: .7rem; letter-spacing: .1em;
+      color: var(--muted); border-bottom: 1px solid var(--border);
+    }
+    .log-table td { padding: .5rem .8rem; border-bottom: 1px solid rgba(255,255,255,.03); }
+    .badge { display: inline-block; padding: .15rem .55rem; border-radius: 4px;
+             font-size: .72rem; font-family: var(--mono); }
+    .badge-green { background: rgba(0,229,160,.12); color: var(--accent1); }
+    .badge-red   { background: rgba(255,77,109,.12); color: var(--accent3); }
+    .badge-gray  { background: rgba(255,255,255,.06); color: var(--muted); }
+
+    /* ── Grid layouts ───────────────────────────── */
+    .two-col { display: grid; grid-template-columns: 1fr 380px; gap: 1.5rem; }
+    @media (max-width: 860px) { .two-col { grid-template-columns: 1fr; } }
+  </style>
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <nav>
+    <a class="brand" href="/">// SMART_ATTENDANCE</a>
+    <a href="/face/"      {% if request.path == '/face/' %}class="active"{% endif %}>Face Recognition</a>
+    <a href="/classroom/" {% if request.path == '/classroom/' %}class="active"{% endif %}>Classroom Counter</a>
+  </nav>
+
+  {% block content %}{% endblock %}
+</body>
+</html>
