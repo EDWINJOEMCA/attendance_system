@@ -113,13 +113,13 @@ def classroom_reset(request):
 
 
 # ── PRELOAD ENGINES AT SERVER START ────────────────────────
-def preload_engines():
-    global _classroom_engine
-    from .classroom_engine import ClassroomEngine
+# def preload_engines():
+#     global _classroom_engine
+#     from .classroom_engine import ClassroomEngine
 
-    print("[INFO] Preloading Classroom Engine...")
-    _classroom_engine = ClassroomEngine(camera_index=0)
-    print("[INFO] Classroom Engine Ready!")
+#     print("[INFO] Preloading Classroom Engine...")
+#     _classroom_engine = ClassroomEngine(camera_index=0)
+#     print("[INFO] Classroom Engine Ready!")
 
-# Call immediately when Django starts
-preload_engines()
+# # Call immediately when Django starts
+# preload_engines()

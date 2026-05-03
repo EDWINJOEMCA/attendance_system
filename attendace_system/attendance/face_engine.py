@@ -21,6 +21,7 @@ from datetime import datetime
 import mediapipe as mp
 from mediapipe.tasks import python as mp_python
 from mediapipe.tasks.python import vision as mp_vision
+from .models import FaceAttendance
 
 # ─────────────────────────────────────────────────────────────
 #  CONFIG
@@ -192,17 +193,19 @@ class FaceAttendanceEngine:
         self.count += 1
         ts = datetime.now().strftime("%H:%M:%S")
         self.log.append({"num": self.count, "time": ts, "status": "PRESENT"})
+        FaceAttendance.objects.create(status="PRESENT") # save on DB
         
         # UPDATE SHARED STATE
         shared_state.face_present_count = self.count
         shared_state.face_log = self.log
 
-        self._finish("present", (0, 230, 80), f"✅  PRESENT — Total: {self.count}")
+        self._finish("present", (0, 230, 80), f" PRESENT — Total: {self.count}")
 
     def _mark_cancelled(self):
         ts = datetime.now().strftime("%H:%M:%S")
         self.log.append({"num": None, "time": ts, "status": "CANCELLED"})
-        self._finish("cancelled", (0, 60, 220), "❌  CANCELLED")
+        FaceAttendance.objects.create(status="CANCELLED")  # save on DB
+        self._finish("cancelled", (0, 60, 220), " CANCELLED")
 
     def _finish(self, result, color, msg):
         self.last_result      = result

@@ -1,3 +1,5 @@
 from django.contrib import admin
+from .models import FaceAttendance, ClassroomEvent
 
-# Register your models here.
+admin.site.register(FaceAttendance)
+admin.site.register(ClassroomEvent)
