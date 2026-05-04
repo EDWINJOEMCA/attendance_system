@@ -153,7 +153,7 @@ async function pollStats() {
     /* Update values */
     cnt.textContent = d.present_count;
     document.getElementById('face-count').textContent = d.face_present_count || 0;
-    document.getElementById('missing-count').textContent = d.missing || 0;
+    document.getElementById('missing-count').textContent = d.difference || 0;
     document.getElementById('students-count').textContent = d.total_students || 0;
 
     /* PLAY SOUND */

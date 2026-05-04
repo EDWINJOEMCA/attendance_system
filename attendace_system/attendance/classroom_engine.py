@@ -268,6 +268,7 @@ class ClassroomEngine:
 
         total_students = 10 # default students count
         missing = total_students - shared_state.face_present_count
+        print(missing, "missing")
 
         return {
             "total_students": total_students,
