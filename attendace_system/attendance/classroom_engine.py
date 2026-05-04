@@ -87,7 +87,7 @@ class ClassroomEngine:
         self._output_frame = None
         self._output_lock  = threading.Lock()
 
-        # 🔥 NEW FIX
+        # NEW FIX
         self.started = False
         self._frame_ready_count = 0
 
@@ -134,7 +134,7 @@ class ClassroomEngine:
 
     # ---------------- STATE UPDATE ----------------
     def _update_state(self, detections):
-        # 🔥 BLOCK EARLY EXECUTION
+        # BLOCK EARLY EXECUTION
         if not self.started:
             return
 
@@ -214,7 +214,7 @@ class ClassroomEngine:
 
             annotated = self._annotate(frame, detections)
 
-            # 🔥 enable after few frames
+            # enable after few frames
             if not self.started:
                 self._frame_ready_count += 1
                 if self._frame_ready_count > 5:
@@ -266,17 +266,17 @@ class ClassroomEngine:
     def get_stats(self):
         from .shared_state import shared_state
 
-        missing = shared_state.face_present_count - self.present_count
-        extra = self.present_count - shared_state.face_present_count
+        total_students = 10 # default students count
+        missing = total_students - shared_state.face_present_count
 
         return {
+            "total_students": total_students,
             "present_count": self.present_count,
             "present_ids": list(self.present_ids),
             "history": self.history[-50:],
             "alarm": time.time() < self.alarm_until,
             "face_present_count": shared_state.face_present_count,
             "difference": max(0, missing),
-            "extra": max(0, extra)
         }
 
     def reset(self):

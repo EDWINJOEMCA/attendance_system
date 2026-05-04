@@ -64,7 +64,6 @@
     <div class="card" style="display:flex;flex-direction:column;gap:1rem;">
       <div style="display:flex;align-items:center;justify-content:space-between;">
         <span style="font-family:var(--mono);font-size:.78rem;letter-spacing:.1em;color:var(--muted);">ATTENDANCE LOG</span>
-        <span id="log-count" style="font-family:var(--mono);font-size:.78rem;color:var(--accent1);">0 entries</span>
       </div>
       <div class="log-scroll">
         <table class="log-table">
@@ -130,7 +129,7 @@
       box-shadow:0 8px 32px rgba(0,229,160,.35);
       animation:slideIn .3s ease;
     `;
-    el.textContent = `✅  PRESENT  #${count}`;
+    el.textContent = ` PRESENT  #${count}`;
     document.body.appendChild(el);
     setTimeout(() => el.remove(), 2500);
   }
