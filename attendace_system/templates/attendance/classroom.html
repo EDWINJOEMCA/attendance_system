@@ -7,7 +7,7 @@
   .log-scroll::-webkit-scrollbar { width: 4px; }
   .log-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
-  #big-count, #face-count, #missing-count, #students-count {
+  #big-count, #face-count, #absent-count, #students-count {
     font-family: var(--mono);
     font-size: 5rem;
     color: var(--accent2);
@@ -41,8 +41,8 @@
     </div>
 
     <div class="stat-card" style="text-align:center;">
-      <div class="label">Missing</div>
-      <div id="missing-count">0</div>
+      <div class="label">absent</div>
+      <div id="absent-count">0</div>
     </div>
 
     <div class="stat-card" style="display:flex;align-items:center;justify-content:flex-end;background:transparent;border:none;">
@@ -153,7 +153,7 @@ async function pollStats() {
     /* Update values */
     cnt.textContent = d.present_count;
     document.getElementById('face-count').textContent = d.face_present_count || 0;
-    document.getElementById('missing-count').textContent = d.difference || 0;
+    document.getElementById('absent-count').textContent = d.difference || 0;
     document.getElementById('students-count').textContent = d.total_students || 0;
 
     /* PLAY SOUND */

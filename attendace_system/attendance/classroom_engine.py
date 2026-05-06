@@ -267,7 +267,7 @@ class ClassroomEngine:
         from .shared_state import shared_state
 
         total_students = 10 # default students count
-        missing = total_students - shared_state.face_present_count
+        absent = total_students - shared_state.face_present_count
 
         return {
             "total_students": total_students,
@@ -276,7 +276,7 @@ class ClassroomEngine:
             "history": self.history[-50:],
             "alarm": time.time() < self.alarm_until,
             "face_present_count": shared_state.face_present_count,
-            "difference": max(0, missing),
+            "difference": max(0, absent),
         }
 
     def reset(self):
